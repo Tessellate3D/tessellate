@@ -1,0 +1,6 @@
+Tessellate Style Guide
+
+Tessellate Navy Blue: #1B1464
+Big font: Ubuntu Bold
+Little font: Open Sans Light
+
