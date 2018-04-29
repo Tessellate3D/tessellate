@@ -70,7 +70,9 @@ def scan():
     	current_height += temp_height
 
     	### Call PCL library with updated paramaters
-    	pcl_communicate(pcl_socket, radius, current_angle, current_height)
+    	pcl_send(pcl_socket, radius, current_angle, current_height)
+    	pcl_compute(pcl_socket)
+
     	current += 1
     reset()
 

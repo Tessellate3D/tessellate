@@ -15,20 +15,21 @@ def deg_to_rad(deg):
 
 
 
-def pcl_communicate(socket, radius, current_angle, current_height):
+def pcl_send(socket, radius, current_angle, current_height):
 	current_angle = deg_to_rad(current_angle)
 	current_height = current_height/1000
 	message = str(radius) + ", " + str(current_angle) + ", " + str(current_height)
 	print("Sending request %s …" % message)
-
 	socket.send(message.encode())
-	
 	response = socket.recv()
-	# socket.send("COMPUTE".encode())
-
 	return response
 
-def shutdown():
+def pcl_compute(socket):
+	socket.send("COMPUTE".encode())
+	response = socket.recv()
+	return response
+
+def shutdown(socket):
 	message = "STOP"
 	print("Sending request %s …" % message)
 
