@@ -74,7 +74,7 @@ def reset_scanner(ser, current_angle, current_height, offset=H_OFFSET, wait_time
 	else:
 		height = - current_height + offset
 	arduino_message(ser, -(current_angle) % 360, height, wait_time)
-	time.sleep(5)
+	time.sleep(2)
 
 	#release the stepper motors
 	ser.write("release\n".encode())

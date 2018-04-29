@@ -71,8 +71,6 @@ def scan():
 
     	### Call PCL library with updated paramaters
     	pcl_send(pcl_socket, radius, current_angle, current_height)
-    	pcl_compute(pcl_socket)
-
     	current += 1
     reset()
 
@@ -110,11 +108,14 @@ def start():
 	global running
 	running = True
 	thread_run()
+	print("Finished Scanning\n")
 
-	print("Finished Scanning" + "\n")
+	time.sleep(2)
+	print("Computing Mesh\n")
+	pcl_compute(pcl_socket)
 
-
-	print("Uploading Mesh" + "\n")
+	time.sleep(2)
+	print("Uploading Mesh\n")
 
 
 	return render_template('index.html')
