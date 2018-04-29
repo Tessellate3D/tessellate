@@ -20,6 +20,7 @@ ser = connect_to_arduino(arduino_port)
 port = "tcp://localhost:5555"
 pcl_socket = connect(port)
 
+
 # Parameters
 num_iters = 20
 radius = "..."
@@ -42,7 +43,6 @@ init_app(app)
 running = False
 current_angle = 0
 current_height = 0
-
 
 
 def reset():
@@ -70,7 +70,7 @@ def scan():
     	current_height += temp_height
 
     	### Call PCL library with updated paramaters
-    	pcl_communicate(radius, current_angle, current_height)
+    	pcl_communicate(pcl_socket, radius, current_angle, current_height)
     	current += 1
     reset()
 
@@ -120,13 +120,12 @@ def start():
 @app.route("/stop/", methods=['POST'])
 def stop():
 	#PAUSE CODE
-	global stop_run
-	stop_run = False
-	
-	# stop = request.get_data()
-	# print(stop)
-	# if stop:
-	# 	print(stop)
+	global running
+	running = False
+
+	stop = request.get_data()
+	if not stop:
+		print("User wants to reset")
 	reset()
 	return render_template('index.html', response=stop)
 

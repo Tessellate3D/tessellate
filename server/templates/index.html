@@ -30,7 +30,7 @@
 
             <!-- other buttons -->
             <form action="/stop/" method="post">
-                <button class="btn btn-primary btn-xl" type="submit" onclick="stop()">Stop</button>
+                <button class="btn btn-primary btn-xl" type="submit" onclick="return stop()">Stop</button>
             </form>
 
             <form action="/download/" method="post">
@@ -53,9 +53,7 @@
 
     <script>
         function stop() {
-            var response = confirm("Stop current scan?");
-            alert(response);
-
+            return confirm("Stop current scan?");
         }
     </script>
 

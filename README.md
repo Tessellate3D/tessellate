@@ -1,5 +1,6 @@
 # Tessellate
-Open source 3D scanning library.
+
+3D Printing offers quick and easy access to a physical design from a digitized mesh file. Transferring a physical model back into a digitized mesh is much less accessible in a desktop platform. We sought to create our own desktop 3D scanner that could generate high fidelity, colored and textured meshes for 3D printing or including models in computer graphics.
 
 ## Getting Started
 
@@ -31,59 +32,32 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [PCL](https://github.com/PointCloudLibrary/pcl) - Point Cloud Library for processing
+* [librealsense](https://github.com/IntelRealSense/librealsense) - Interfacing with the Intel RealSense
+* [Flask](https://github.com/pallets/flask) - Webserver UI
+* other ones
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/Tessellate3D/tessellate/tags). 
 
 ## Authors
 
-* **Trey Fortmuller** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-* **Suneel Belkhale** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-* **Nathan Le** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* [Suneel Belkhale](https://github.com/suneelbelkhale)
+* [Nathan Le](https://github.com/nathan-le)
+* [Trey Fortmuller](https://github.com/treyfortmuller)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU GPLv3 License - see the [LICENSE.txt](LICENSE.txt) file for details
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* [Aakash Adesara](www.aakashadesara.com) and the [CalHacks Fellowship](https://medium.com/cal-hacks/the-cal-hacks-fellowship-transcending-beyond-the-hack-468a84a9db06)
 
