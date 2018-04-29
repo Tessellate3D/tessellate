@@ -1,0 +1,63 @@
+{% set sitename = 'Tessellate' %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+		<link rel = "stylesheet" type = "text/css" href="{{ url_for('static', filename='stylesheets/style.css') }}">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ sitename }}</title>
+    </head>
+
+    <header>
+        <img src="{{ url_for('static', filename='img/tessellate_logo_stacked.png') }}" alt="">
+    </header>
+
+    <body>
+        <div class="container">
+            <!-- <h1 class="title">{{ sitename }}</h1> -->
+
+            <!-- textbox -->
+            <form action="/start/" method="post">
+                <div class="field">
+                    <label class="label">Enter a Mesh Name:  </label>
+                    <input class="input" type="text" id="mesh_name" name="mesh_name">
+                </div>
+
+                <!-- submit button -->
+                <button class="btn btn-primary btn-xl" type="submit" onclick="alert('Scanning Started')">Start</button>
+            </form>
+
+            <!-- other buttons -->
+            <form action="/stop/" method="post">
+                <button class="btn btn-primary btn-xl" type="submit" onclick="stop()">Stop</button>
+            </form>
+
+            <form action="/download/" method="post">
+                <button class="btn btn-primary btn-xl" type="submit" onclick="alert('Downloading Point Cloud Mesh')">Download</button>
+            </form>
+	        
+
+        </div>
+
+        {% block content %}{% endblock %}
+        {% if error %}
+        <section class="section">
+            <div class="container">
+                <div class="notification is-warning">
+                    {{ error }}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+    <script>
+        function stop() {
+            var response = confirm("Stop current scan?");
+            alert(response);
+
+        }
+    </script>
+
+    </body>
+</html>

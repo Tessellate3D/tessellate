@@ -1,0 +1,9 @@
+# Mac OS desktop styling file
+.DS_Store
+
+# python caching
+__pycache__
+*.pyc
+
+# build directories
+build
