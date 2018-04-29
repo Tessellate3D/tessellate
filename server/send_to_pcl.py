@@ -18,7 +18,7 @@ def deg_to_rad(deg):
 def pcl_communicate(socket, radius, current_angle, current_height):
 	current_angle = deg_to_rad(current_angle)
 	current_height = current_height/1000
-	message = str(radius) + " " + str(current_angle) + " " + str(current_height)
+	message = str(radius) + ", " + str(current_angle) + ", " + str(current_height)
 	print("Sending request %s …" % message)
 
 	socket.send(message.encode())
