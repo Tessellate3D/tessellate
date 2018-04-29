@@ -23,7 +23,7 @@ pcl_socket = connect(port)
 
 # Parameters
 num_iters = 20
-radius = "..."
+radius = 0.313151
 
 
 
@@ -127,6 +127,7 @@ def stop():
 	if not stop:
 		print("User wants to reset")
 	reset()
+	time.sleep(2)
 	return render_template('index.html', response=stop)
 
 
