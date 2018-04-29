@@ -1,4 +1,4 @@
-# Tessellate
+![Alt text](graphic_design/white_background/tessellate_logo_small.png?raw=true "Title")
 
 3D Printing offers quick and easy access to a physical design from a digitized mesh file. Transferring a physical model back into a digitized mesh is much less accessible in a desktop platform. We sought to create our own desktop 3D scanner that could generate high fidelity, colored and textured meshes for 3D printing or including models in computer graphics.
 
@@ -52,6 +52,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * [Suneel Belkhale](https://github.com/suneelbelkhale)
 * [Nathan Le](https://github.com/nathan-le)
 * [Trey Fortmuller](https://github.com/treyfortmuller)
+
+Visit the [Tessellate website](https://tessellate3d.xyz/) for more information.
 
 ## License
 
