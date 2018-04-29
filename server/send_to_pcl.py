@@ -1,7 +1,6 @@
 import zmq
 
 
-
 def connect(port):
 	context = zmq.Context()
 	print("Connecting to pcl server at " + port)

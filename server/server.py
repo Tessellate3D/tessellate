@@ -1,5 +1,5 @@
 from flask import *
-import os
+import os, sys
 from threading import Thread
 from time import sleep
 import numpy as np
@@ -8,8 +8,6 @@ import time
 import os
 from move import *
 from send_to_pcl import *
-
-
 
 UPLOAD_FOLDER = 'meshes'
 mesh_name = None
@@ -24,7 +22,7 @@ pcl_socket = connect(port)
 
 # Parameters
 num_iters = 20
-radiue = "..."
+radius = "..."
 
 
 
