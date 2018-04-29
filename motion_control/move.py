@@ -143,7 +143,8 @@ dest_path = '/home/greg/images/out/'
 # 	greg(img_num, theta, del_height, move_wait, stepper_wait, image_path, dest_path)
 
 def connect_to_arduino(port):
-	ser = serial.Serial(port, 9600)  # open serial communication at 9600 baud to the arduino
+	ser = serial.Serial(port, 9600)
+	#ser = serial.Serial(port, 9600)  # open serial communication at 9600 baud to the arduino
 	print("initializing...")
 	time.sleep(5)  # wait for initialization of the serial communication to Arduino
 	return ser
@@ -164,12 +165,7 @@ def arduino_message(ser, rotation=theta, translation=del_height, wait_time=move_
 def single_iteration(ser, angle=theta, translation=del_height, dest_path=dest_path, wait_time=move_wait, wait_stepper=stepper_wait):
 
 	arduino_message(ser, angle, translation, wait_time)
-
-	### TO DO ###
-	# CODE FOR CALLING SR300 Camera
-
 	time.sleep(wait_stepper)
-	print("Finished Single Iteration\n")
 	return angle, translation
 
 def reset_scanner(ser, current_angle, current_height, offset=H_OFFSET, wait_time=move_wait):

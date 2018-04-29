@@ -7,6 +7,7 @@ import serial
 import time
 import os
 from move import *
+from send_to_pcl import *
 
 
 
@@ -17,9 +18,13 @@ mesh_name = None
 arduino_port = '/dev/tty.usbmodem1421'
 ser = connect_to_arduino(arduino_port)
 
+# PCL port
+port = "tcp://localhost:5555"
+pcl_socket = connect(port)
+
 # Parameters
 num_iters = 20
-
+radiue = "..."
 
 
 
@@ -57,11 +62,17 @@ def scan():
     current = 0
 
     while current <= num_iters and running:
-    	# TO DO Add greg command code
     	print("Executing iteration " + str(current))
+
+    	### Move Arduino to next state
     	temp_angle, temp_height = single_iteration(ser)
+
+    	### Update current positions
     	current_angle += temp_angle
     	current_height += temp_height
+
+    	### Call PCL library with updated paramaters
+    	pcl_communicate(radius, current_angle, current_height)
     	current += 1
     reset()
 
@@ -90,7 +101,7 @@ def start():
 	mesh_name = request.form['mesh_name']
 	if not mesh_name:
 		return render_template('index.html', error='Bad Mesh Name!')
-	mesh_name = mesh_name + ".txt" #add file extension
+	mesh_name = mesh_name + ".stl" #add file extension
 
 
 
@@ -104,7 +115,6 @@ def start():
 
 
 	print("Uploading Mesh" + "\n")
-	#Place output files in directory scan/meshes
 
 
 	return render_template('index.html')
