@@ -1,4 +1,5 @@
 import zmq
+import numpy as np
 
 
 def connect(port):
