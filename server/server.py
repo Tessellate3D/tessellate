@@ -27,6 +27,7 @@ pcl_socket = connect(port)
 # Parameters
 num_iters = 20
 radius = 0.313151
+img_per_height = 3
 
 
 
@@ -62,19 +63,26 @@ def scan():
     global current_height
     current = 0
 
-    while current <= num_iters and running:
-    	print("Executing iteration " + str(current))
+    while current < num_iters and running:
+        print("Executing iteration " + str(current))
+        for i in range(img_per_height):
+             ### Move Arduino to next state
+             temp_angle, temp_height = single_iteration2(ser, counter=i)
+             ### Update current positions
+             current_angle += temp_angle
+             ### Call PCL library with updated paramaters
+             pcl_send(pcl_socket, radius, current_angle, current_height)
 
     	### Move Arduino to next state
-    	temp_angle, temp_height = single_iteration(ser)
+    	#temp_angle, temp_height = single_iteration(ser)
 
     	### Update current positions
-    	current_angle += temp_angle
-    	current_height += temp_height
+    	#current_angle += temp_angle
+        current_height += temp_height
 
     	### Call PCL library with updated paramaters
-    	pcl_send(pcl_socket, radius, current_angle, current_height)
-    	current += 1
+    	#pcl_send(pcl_socket, radius, current_angle, current_height)
+        current += 1
     print("Finished with image collection.")
     reset()
 

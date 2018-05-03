@@ -22,13 +22,13 @@ def pcl_send(socket, radius, current_angle, current_height):
 	print("Sending request %s …" % message)
 	socket.send(message.encode())
 	response = socket.recv()
-	print("Response from PCL: " + response)
+	print("Response from PCL: " + str(response.decode()))
 	return response
 
 def pcl_compute(socket):
 	socket.send("COMPUTE".encode())
 	response = socket.recv()
-	print("Response from PCL: " + response)
+	print("Response from PCL: " + str(response.decode()))
 	return response
 
 def shutdown(socket):
@@ -37,6 +37,6 @@ def shutdown(socket):
 
 	socket.send(message.encode())
 	response = socket.recv()
-	print("Response from PCL: " + response)
+	print("Response from PCL: " + str(response.decode()))
 	return response
 

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
+#include <math.h>
 
 #include <librealsense2/rs.hpp> // Include RealSense Cross Platform API
 #include "example.hpp"          // Include short list of convenience functions for rendering
@@ -16,12 +18,14 @@
 #include <pcl/point_cloud.h>
 #include <pcl/console/parse.h>
 #include <pcl/common/transforms.h>
-#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/filters/passthrough.h>
+#include <pcl/filters/radius_outlier_removal.h>
+//#include <pcl/visualization/pcl_visualizer.h>
 
 // Helper functions
 void register_glfw_callbacks(window& app, glfw_state& app_state);
 
-using pcl_ptr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
+using pcl_ptr = pcl::PointCloud<pcl::PointXYZRGB>::Ptr;
 using namespace std;
 
 struct PC_sample{
@@ -34,47 +38,82 @@ struct PC_sample{
 //GLOBAL STUFF
 rs2::points global_rs_points;
 std::vector<PC_sample> all_samples;
+float ZTOLERANCE = 0.00000000001f;
 
 pcl_ptr get_pc()
 {
     rs2::points points = global_rs_points;
-    pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     auto sp = points.get_profile().as<rs2::video_stream_profile>();
-    cloud->width = sp.width();
-    cloud->height = sp.height();
-    cloud->is_dense = false;
-    cloud->points.resize(points.size());
-    auto ptr = points.get_vertices();
-    for (auto& p : cloud->points)
+    int size = ceil(points.size() / 23.0);
+    cloud->width = size;
+    cloud->height = 1;
+    cloud->is_dense = true;
+    cloud->points.resize(size);
+    int total_good_points = 0;
+    auto vertices = points.get_vertices();
+    auto tex_coords = points.get_texture_coordinates();
+    for (int i = 0; i < cloud->points.size(); i++)
     {
-        p.x = ptr->x;
-        p.y = ptr->y;
-        p.z = ptr->z;
-        ptr++;
+        // get rid of anything close to the camera
+        bool zr = abs(ptr->x) < ZTOLERANCE && abs(ptr->y) < ZTOLERANCE && abs(ptr->z) < ZTOLERANCE;
+	double dist = sqrt(ptr->x*ptr->x + ptr->y*ptr->y + ptr->z*ptr->z);
+        if (dist < 0.5) { //meters hopefully
+	    p.x = ptr->x;
+	    p.y = -ptr->y;
+	    p.z = -ptr->z;
+            p.r = tex_coords[i]
+            p.g = ptr->g;	
+            p.b = ptr->b;	
+            total_good_points += 1;  
+        }
+        ptr+= 23;
     } 
+    cloud->points.resize(total_good_points);
+    cloud->width = total_good_points;
+    cout << cloud->height << ", " << cloud->width << endl;
     return cloud;
 }
 
 pcl_ptr transform_pc(PC_sample sample) {
     Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << sample.r * cos(sample.theta), sample.r * sin(sample.theta), -sample.z;
-    transform.rotate(Eigen::AngleAxisf(sample.theta, Eigen::Vector3f::UnitZ()));
+    transform.translation() << - sample.r * sin(sample.theta), sample.z, sample.r * cos(sample.theta);
+    //transform.translation() << 0.0f, sample.z, sample.r;
+    transform.rotate(Eigen::AngleAxisf(-sample.theta, Eigen::Vector3f::UnitY()));
 
-    pcl_ptr transformed_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl_ptr transformed_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
     pcl::transformPointCloud(*sample.pc, *transformed_cloud, transform);
 
-    return transformed_cloud;
+    pcl::PassThrough<pcl::PointXYZRGB> pass;
+    pass.setInputCloud( transformed_cloud);
+    pass.setFilterFieldName("y");
+    pass.setFilterLimits(-0.038, 1.0);
+
+    pcl_ptr output(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    pass.filter(*output);
+
+/*    pcl::RadiusOutlierRemoval<pcl::PointXYZRGB> rorfilter;
+    rorfilter.setInputCloud(output);
+    rorfilter.setRadiusSearch(0.01);
+    rorfilter.setMinNeighborsInRadius (8);
+   
+    pcl_ptr radial_output(new pcl::PointCloud<pcl::PointXYZRGB>);
+   
+    rorfilter.filter(*radial_output);     
+  */  
+    return output;
 }
 
 //main method for saving pc
 int run_pc_collection(std::vector<PC_sample> samples, int num_samples, std::string pc_filename){
     
     //create one big pc
-    pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    //apply transforms, merge
-    for (int i = 0; i < num_samples; i++)
+    //apply transforms, merge, IGNORE LAST IMAGE
+    for (int i = 0; i < num_samples - 1; i++)
     {
         pcl_ptr transformed = transform_pc(samples[i]);
 	*cloud += *transformed; //merges
@@ -96,6 +135,7 @@ std::vector<string> split(const string &s, char delim) {
     return tokens;
 }
 
+
 int run_op(int * stop){
     
     //  Prepare our context and socket
@@ -113,7 +153,7 @@ int run_op(int * stop){
             std::cout << "-- STOPPING BY REQUEST --" << std::endl;
             break;
         } 
-        else if (req.compare("COMPUTE") == 0) {
+        else if (req.substr(0, 7).compare("COMPUTE") == 0) {
             run_pc_collection(all_samples, all_samples.size(), "pointcloud.pcd");
 	    all_samples.clear();
 	}
@@ -132,7 +172,9 @@ int run_op(int * stop){
             pcs.r = r;
             pcs.theta = theta;
             pcs.z = z;
-
+            stringstream ss;
+            ss << "partial_pc-" << (theta * 180.0/3.14159) << "_" << z << ".pcd";
+            pcl::io::savePCDFileASCII(ss.str(), *sample); 
 	    all_samples.push_back(pcs);
         }
         zmq::message_t reply (7);

@@ -67,6 +67,14 @@ def single_iteration(ser, angle=theta, translation=del_height, wait_time=move_wa
 	time.sleep(wait_stepper)
 	return angle, translation
 
+def single_iteration2(ser, counter, angle=theta, translation=del_height, wait_time=move_wait, wait_stepper=stepper_wait):
+        if counter == 2:
+             arduino_message(ser, angle, translation, wait_time)
+        else:
+             arduino_message(ser, angle, 0, wait_time)
+        time.sleep(wait_stepper)
+        return angle, translation
+
 def reset_scanner(ser, current_angle, current_height, offset=H_OFFSET, wait_time=move_wait):
 	print("===== MOVING DOWN =====")
 	if current_height == 0:
