@@ -4,7 +4,7 @@
 # python caching
 __pycache__
 *.pyc
-
+venv
 # build directories
 build
 

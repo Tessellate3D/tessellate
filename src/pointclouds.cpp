@@ -51,9 +51,8 @@ pcl_ptr get_pc()
     cloud->is_dense = true;
     cloud->points.resize(size);
     int total_good_points = 0;
-    auto vertices = points.get_vertices();
-    auto tex_coords = points.get_texture_coordinates();
-    for (int i = 0; i < cloud->points.size(); i++)
+    auto ptr = points.get_vertices();
+    for (auto& p : cloud->points)
     {
         // get rid of anything close to the camera
         bool zr = abs(ptr->x) < ZTOLERANCE && abs(ptr->y) < ZTOLERANCE && abs(ptr->z) < ZTOLERANCE;
@@ -62,12 +61,13 @@ pcl_ptr get_pc()
 	    p.x = ptr->x;
 	    p.y = -ptr->y;
 	    p.z = -ptr->z;
-            p.r = tex_coords[i]
-            p.g = ptr->g;	
-            p.b = ptr->b;	
+            p.r = 100.0;
+            p.g = 255.0;
+            p.b = 100.0;
+            // TODO get the colors, rn just green
             total_good_points += 1;  
         }
-        ptr+= 23;
+        ptr += 23;
     } 
     cloud->points.resize(total_good_points);
     cloud->width = total_good_points;

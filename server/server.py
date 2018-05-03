@@ -25,7 +25,7 @@ pcl_socket = connect(port)
 
 
 # Parameters
-num_iters = 20
+num_iters = 10
 radius = 0.313151
 img_per_height = 3
 
