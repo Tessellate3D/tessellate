@@ -108,12 +108,12 @@ int run_op(int * stop){
         socket.recv(&request);
         string req = (char *)request.data();
         std::cout << "Backend Received Request: " << req << std::endl;
-        if (req.compare("STOP")) {
+        if (req.compare("STOP") == 0) {
             *stop = 1;
             std::cout << "-- STOPPING BY REQUEST --" << std::endl;
             break;
         } 
-        else if (req.compare("COMPUTE")) {
+        else if (req.compare("COMPUTE") == 0) {
             run_pc_collection(all_samples, all_samples.size(), "pointcloud.pcd");
 	    all_samples.clear();
 	}
