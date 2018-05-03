@@ -13,12 +13,15 @@ UPLOAD_FOLDER = 'meshes'
 mesh_name = None
 
 # Connect with Arduino
-arduino_port = '/dev/tty.usbmodem1421'
+arduino_port = '/dev/ttyS0'
 ser = connect_to_arduino(arduino_port)
 
 # PCL port
 port = "tcp://localhost:5555"
 pcl_socket = connect(port)
+
+# Start PCL recieving code
+#os.system("")
 
 
 # Parameters
@@ -72,6 +75,7 @@ def scan():
     	### Call PCL library with updated paramaters
     	pcl_send(pcl_socket, radius, current_angle, current_height)
     	current += 1
+    print("Finished with image collection.")
     reset()
 
 
@@ -110,12 +114,14 @@ def start():
 	thread_run()
 	print("Finished Scanning\n")
 
-	time.sleep(2)
-	print("Computing Mesh\n")
-	pcl_compute(pcl_socket)
+	if running:
+		time.sleep(2) 
+		print("Computing Mesh\n")
+		pcl_compute(pcl_socket)
 
-	time.sleep(2)
-	print("Uploading Mesh\n")
+		time.sleep(2)
+		print("Uploading Mesh\n")
+		#os.system("")
 
 
 	return render_template('index.html')
