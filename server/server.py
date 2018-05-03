@@ -13,7 +13,7 @@ UPLOAD_FOLDER = 'meshes'
 mesh_name = None
 
 # Connect with Arduino
-arduino_port = '/dev/ttyS0'
+arduino_port = '/dev/ttyACM0'
 ser = connect_to_arduino(arduino_port)
 
 # PCL port
@@ -82,6 +82,7 @@ def scan():
 def thread_run():
     t = Thread(target=scan)
     t.start()
+    t.join()
     return "Processing"
 
 
@@ -108,7 +109,7 @@ def start():
 
 
 	#SCANNING CODE
-	print("Starting Scan" + "\n")
+	print("Starting Scan\n")
 	global running
 	running = True
 	thread_run()
@@ -116,11 +117,11 @@ def start():
 
 	if running:
 		time.sleep(2) 
-		print("Computing Mesh\n")
+		print("Combining Point Cloud\n")
 		pcl_compute(pcl_socket)
 
 		time.sleep(2)
-		print("Uploading Mesh\n")
+		print("Point Cloud to Mesh\n")
 		#os.system("")
 
 
@@ -135,8 +136,8 @@ def stop():
 	stop = request.get_data()
 	if not stop:
 		print("User wants to reset")
-	reset()
-	time.sleep(2)
+		reset()
+		time.sleep(2)
 	return render_template('index.html', response=stop)
 
 
